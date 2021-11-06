@@ -1,11 +1,11 @@
 const path = require('path');
 const fs = require('fs');
-const pathForCheck = ( __dirname + '/secret-folder');
+const pathForCheck = path.join( __dirname, '/', 'secret-folder');
 
 fs.readdir(pathForCheck,['utf8' , {withFileTypes: true}] ,(err, files) => {
   if(err) throw err;
   files.forEach((i,index) => {
-    let pathForCheckFile = pathForCheck + '/' + files[index];
+    let pathForCheckFile = path.join(pathForCheck, '/', files[index]);
     fs.stat(pathForCheckFile, (err, stat) => {
       if (err) {console.log(err);
       }

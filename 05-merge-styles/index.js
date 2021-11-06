@@ -1,16 +1,20 @@
 const fs = require('fs');
 const path = require('path');
-const pathForCss = ( __dirname + '/styles');
-const pathForProject = ( __dirname + '/project-dist');
+const pathForCss = path.join( __dirname, '/','styles');
+const pathForProject = path.join( __dirname, '/', 'project-dist');
+const pathForProjectFile = path.join(pathForProject, '/', 'bundle.css');
+
 
 fs.readdir(pathForProject,['utf8' , {withFileTypes: true}] ,(err, files) => {
   if(err) throw err;
   if (files.length > 1) {
-    console.log('Файл bundle.css уже собран, не пытайтесь его ломать. ))');
-    process.exit(-1);
+    fs.truncate(pathForProjectFile, err => {
+      if(err) throw err;
+    });
   }
 });
-fs.open(pathForProject + '/bundle.css', 'a+', (err) => {
+
+fs.open(pathForProjectFile, 'a+', (err) => {
   if(err) throw err;
 });
 fs.readdir(pathForCss,['utf8' , {withFileTypes: true}] ,(err, files) => {
@@ -23,7 +27,7 @@ fs.readdir(pathForCss,['utf8' , {withFileTypes: true}] ,(err, files) => {
         if (stat.isFile() === true && path.parse(pathForCssFiles).ext === '.css') {
           fs.readFile(pathForCssFiles, 'utf8', (err, data) => {
             if(err) throw err;
-            fs.appendFile(pathForProject + '/bundle.css', data, (err) => {
+            fs.appendFile(pathForProjectFile, data, (err) => {
               if(err) throw err;
             });
           });
@@ -33,3 +37,13 @@ fs.readdir(pathForCss,['utf8' , {withFileTypes: true}] ,(err, files) => {
   }
   console.log('файл bundle.css собран');
 });
+
+
+
+
+
+
+
+
+
+
